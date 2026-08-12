@@ -14,7 +14,7 @@ C4Component
         }
 
         Boundary(events_context, "Events Context") {
-            Component(events_core, "Events Core", "Node.js", "Core domain logic for event management and catalog.")
+            Component(events_core, "Events Module", "Node.js", "Core domain logic for event management and catalog.")
             Component(venue_adapter, "Venue Plugin Manager", "Microkernel Pattern", "Handles different venue integrations for seating maps and real-time availability.")
         }
 
@@ -32,7 +32,7 @@ C4Component
     }
 
     System_Ext(payment_ext, "Payment Gateway", "External payment processor.")
-    System_Ext(venue_ext, "External Venue Systems", "Proprietary venue seating/access systems.")
+    System_Ext(venue_ext, "Venue Systems", "Proprietary venue seating/access systems.")
     System_Ext(notifications_ext, "Notification Service", "External email/SMS provider.")
 
     Rel(spa, identity, "Auth/Profile", "JSON/HTTPS")

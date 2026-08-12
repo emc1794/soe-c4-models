@@ -10,7 +10,7 @@ C4Component
     Container_Boundary(monolith, "Backend Monolith") {
         
         Boundary(events_context, "Events Context") {
-            Component(events_svc, "Events Service", "Domain Logic", "Publishes 'EventCancelled' or 'EventUpdated'.")
+            Component(events_svc, "Events Module", "Domain Logic", "Publishes 'EventCancelled' or 'EventUpdated'.")
         }
 
         Boundary(ordering_context, "Ordering Context") {
@@ -18,15 +18,15 @@ C4Component
         }
 
         Boundary(payment_context, "Payment Context") {
-            Component(payment_svc, "Payment Service", "Domain Logic", "Consumes 'OrderCreated'; Publishes 'PaymentSuccessful' or 'PaymentFailed'.")
+            Component(payment_svc, "Payment Module", "Domain Logic", "Consumes 'OrderCreated'; Publishes 'PaymentSuccessful' or 'PaymentFailed'.")
         }
 
         Boundary(notif_context, "Notification Context") {
-            Component(notif_svc, "Notification Service", "Domain Logic", "Consumes various events to trigger user alerts.")
+            Component(notif_svc, "Notification Module", "Domain Logic", "Consumes various events to trigger user alerts.")
         }
 
         Boundary(identity_context, "Identity Context") {
-            Component(identity_svc, "Identity Service", "Domain Logic", "Consumes 'PaymentSuccessful' to generate digital tickets.")
+            Component(identity_svc, "Identity Module", "Domain Logic", "Consumes 'PaymentSuccessful' to generate digital tickets.")
         }
     }
 
@@ -45,3 +45,9 @@ C4Component
     Rel(events_svc, database, "SQL/JDBC")
     Rel(ordering_svc, database, "SQL/JDBC")
 ```
+
+**Note:** this diagram is scoped to this session's focus — event publishing/consuming — so it
+omits sub-component detail that hasn't changed, such as the `Venue Plugin Manager` introduced in
+Session 3. That integration still exists inside the Events Module (see the C2 diagram's
+`Rel(api, venue, ...)`, unchanged since Session 2); it just isn't part of the event-driven
+messaging this session is teaching.

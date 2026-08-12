@@ -7,11 +7,13 @@ C4Component
     Container(gateway, "API Gateway", "Kong", "Routes Core requests here.")
     Container(broker, "Message Broker", "RabbitMQ", "External coordination with the Ordering Service.")
     ContainerDb(db, "Monolith DB", "MySQL", "Core database.")
+    System_Ext(payment_ext, "Payment Gateway", "External payment processor.")
 
     Container_Boundary(monolith, "Core Monolith") {
         Component(identity, "Identity Module", "Domain Logic", "Auth and digital passes.")
         Component(events, "Events Module", "Domain Logic", "Event catalog and venues.")
-        Component(payments, "Payment Module", "Integration", "External payment processing.")
+        Component(fraud, "Fraud Check Module", "Domain Logic", "Validates the order for fraud risk before payment is attempted.")
+        Component(payments, "Payment Module", "Integration", "Processes payments; reacts to Ordering events.")
         Component(notifs, "Notification Module", "Integration", "Alerts and emails.")
 
         Component(order_sync, "Ordering Event Consumer", "RabbitMQ Listener", "Listens for completed orders to issue tickets/notifications.")
@@ -19,6 +21,12 @@ C4Component
 
     Rel(gateway, identity, "Auth requests")
     Rel(gateway, events, "Catalog requests")
+
+    Rel(broker, fraud, "Delivers 'OrderCreated'", "AMQP")
+    Rel(fraud, payments, "Fraud check passed — process payment", "Internal Call")
+    Rel(fraud, broker, "Publishes 'PaymentFailed' (fraud rejection)", "AMQP")
+    Rel(payments, payment_ext, "Authorizes and captures payment", "HTTPS/API")
+    Rel(payments, broker, "Publishes 'PaymentProcessed' / 'PaymentFailed'", "AMQP")
 
     Rel(broker, order_sync, "Receives 'OrderCompleted'")
     Rel(order_sync, identity, "Triggers ticket issuance")

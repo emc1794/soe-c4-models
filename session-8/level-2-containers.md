@@ -52,7 +52,7 @@ sources of truth (write model); `read_db` is a derived, eventually-consistent pr
 
 **Why CQRS here and not elsewhere:** event search, event availability, and seat/ticket availability are
 exactly the read-heavy, spike-prone workloads called out for this session — the same on-sale traffic
-spikes described in `ticketwave-events.md`. Splitting them out means a flood of read traffic during a
+spikes described in `../../soe-ticket-api/ticketwave-events.md`. Splitting them out means a flood of read traffic during a
 popular on-sale no longer contends with the Ordering Service's write path (seat reservation), which was
 already the system's most contention-sensitive part and the reason it was extracted first, in Session 6.
 Nothing else in the system gets a read/write split — there's no workload pressure that justifies it.
