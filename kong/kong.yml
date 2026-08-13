@@ -1,0 +1,31 @@
+_format_version: "3.0"
+_transform: true
+
+# Kong is configured
+# file is the entire "implementation" of the Gateway. It routes Core requests to
+# the Monolith and Ordering requests to the Ordering Service, per the Session 7
+# architecture (session-7/level-2-containers.md).
+
+services:
+  - name: monolith-service
+    url: http://ticketwave_api:3000
+    routes:
+      - name: monolith-identity
+        paths: ["/api/v1/identity"]
+        strip_path: false
+      - name: monolith-events
+        paths: ["/api/v1/events"]
+        strip_path: false
+      - name: monolith-payment
+        paths: ["/api/v1/payment"]
+        strip_path: false
+      - name: monolith-notification
+        paths: ["/api/v1/notification"]
+        strip_path: false
+
+  - name: ordering-service
+    url: http://ticketwave_ordering:3001
+    routes:
+      - name: ordering-orders
+        paths: ["/api/v1/orders"]
+        strip_path: false
